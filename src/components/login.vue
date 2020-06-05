@@ -2,13 +2,12 @@
   <div class="login-container">
     <el-card class="box-card">
       <h2 class="text-login">LOGIN</h2>
-
       <el-form ref="form" class="login-form">
         <el-form-item>
           <el-input v-model="username" type="text" placeholder="请输入用户名"/>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" placeholder="请输入密码"/>
+          <el-input v-model="password" type="password" placeholder="请输入密码"/>
         </el-form-item>
         <el-form-item>
           <el-button class="btn-login" type="primary">登录</el-button>
@@ -22,9 +21,16 @@
 
 <script>
   export default {
-    data: {
-      username: '',
-      password: '',
+    data() {
+      return {
+        username: 'hello',
+        password: '',
+      };
+    },
+    methods: {
+      login() {
+
+      }
     }
   }
 </script>
@@ -36,12 +42,14 @@
     align-items: center;
     height: 100%;
     width: 100%;
+    background-color: #ffffff;
   }
 
   .box-card {
     width: 480px;
     height: 360px;
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.31);
   }
 
   .text-login {
