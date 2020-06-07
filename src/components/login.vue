@@ -10,7 +10,7 @@
           <el-input v-model="password" type="password" placeholder="请输入密码"/>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn-login" type="primary">登录</el-button>
+          <el-button class="btn-login" @click="login" type="primary">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -29,6 +29,19 @@
     },
     methods: {
       login() {
+        console.log(this.username);
+        console.log(this.password);
+
+        this.$axios.get("http://localhost:8080/login", {
+          username: this.username,
+          password: this.password,
+        })
+        .then(function (response) {
+
+        })
+        .catch(function (error) {
+
+        })
 
       }
     }
