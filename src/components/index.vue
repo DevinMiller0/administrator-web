@@ -19,7 +19,7 @@
             active-text-color="#ffd04b">
 
             <el-menu-item index="0">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-s-home"/>
               <span slot="title">HOME</span>
             </el-menu-item>
 
@@ -45,24 +45,35 @@
 
 
             <el-menu-item index="2">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-menu"/>
               <span slot="title">文章管理</span>
             </el-menu-item>
 
 
 
             <el-menu-item index="4">
-              <i class="el-icon-setting"></i>
+              <i class="el-icon-edit-outline"/>
               <span slot="title">文章发布</span>
+            </el-menu-item>
+
+            <el-menu-item index="5">
+              <i class="el-icon-data-analysis"/>
+              <span slot="title">数据统计</span>
             </el-menu-item>
 
 
 
           </el-menu>
         </el-aside>
-        <el-main>Main</el-main>
+
+        <el-main>
+          Main
+        </el-main>
+
       </el-container>
+
     </el-container>
+
 </template>
 
 <script>
