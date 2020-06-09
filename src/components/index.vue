@@ -10,7 +10,7 @@
       <el-container>
         <el-aside width="230px">
           <el-menu
-            default-active="2"
+            default-active="0"
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
@@ -18,56 +18,31 @@
             text-color="#fff"
             active-text-color="#ffd04b">
 
-            <el-menu-item index="0">
+            <el-menu-item index="0" @click="switchMenu(0)">
               <i class="el-icon-s-home"/>
               <span slot="title">HOME</span>
             </el-menu-item>
 
-<!--            <el-submenu index="1">-->
-<!--              <template slot="title">-->
-<!--                <i class="el-icon-location"></i>-->
-<!--                <span>导航一</span>-->
-<!--              </template>-->
-<!--              <el-menu-item-group>-->
-<!--                <template slot="title">分组一</template>-->
-<!--                <el-menu-item index="1-1">选项1</el-menu-item>-->
-<!--                <el-menu-item index="1-2">选项2</el-menu-item>-->
-<!--              </el-menu-item-group>-->
-<!--              <el-menu-item-group title="分组2">-->
-<!--                <el-menu-item index="1-3">选项3</el-menu-item>-->
-<!--              </el-menu-item-group>-->
-<!--              <el-submenu index="1-4">-->
-<!--                <template slot="title">选项4</template>-->
-<!--                <el-menu-item index="1-4-1">选项1</el-menu-item>-->
-<!--              </el-submenu>-->
-<!--            </el-submenu>-->
-
-
-
-            <el-menu-item index="2">
+            <el-menu-item index="1" @click="switchMenu(1)">
               <i class="el-icon-menu"/>
               <span slot="title">文章管理</span>
             </el-menu-item>
 
-
-
-            <el-menu-item index="4">
+            <el-menu-item index="2" @click="switchMenu(2)">
               <i class="el-icon-edit-outline"/>
               <span slot="title">文章发布</span>
             </el-menu-item>
 
-            <el-menu-item index="5">
+            <el-menu-item index="3" @click="switchMenu(3)">
               <i class="el-icon-data-analysis"/>
               <span slot="title">数据统计</span>
             </el-menu-item>
-
-
 
           </el-menu>
         </el-aside>
 
         <el-main>
-          Main
+          <router-view></router-view>
         </el-main>
 
       </el-container>
@@ -84,10 +59,42 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+
+      switchMenu(index) {
+        switch (index) {
+          case 0: {
+            console.log('home');
+            this.$router.push({
+              path:'/home'
+            });
+            break
+          }
+          case 1: {
+            console.log('文章管理');
+            this.$router.push({
+              path:'/articleManager'
+            });
+            break
+          }
+          case 2: {
+            console.log('文章发布');
+            this.$router.push({
+              path:'/articlePublish'
+            });
+            break
+          }
+          case 3: {
+            console.log('数据统计');
+            this.$router.push({
+              path:'/dataStatistic'
+            });
+            break
+          }
+        }
       }
     }
   }
-
 </script>
 
 <style scoped>

@@ -4,6 +4,8 @@ import index from "../components/index";
 import login from "../components/login";
 import dataStatistic from "../components/dataStatistic";
 import articleManager from "../components/articleManager";
+import home from "../components/home";
+import articlePublish from "../components/articlePublish";
 
 Vue.use(Router);
 
@@ -14,12 +16,11 @@ export default new Router({
       name: 'index',
       component: index,
       children: [
-        {
-          path: '/articleManager',
-          name: articleManager,
-          component: articleManager
-        }
-      ]
+        {path: '/home', component: home},
+        {path: '/articleManager', component: articleManager},
+        {path: '/articlePublish', component: articlePublish},
+        {path: '/dataStatistic', component: dataStatistic},
+        ]
     },
     {
       path: '/login',

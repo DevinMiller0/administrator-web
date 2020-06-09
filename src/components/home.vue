@@ -1,10 +1,10 @@
 <template>
-<h3>data statistic</h3>
+    <h3>home</h3>
 </template>
 
 <script>
     export default {
-        name: "DataStatistic"
+        name: "home"
     }
 </script>
 
