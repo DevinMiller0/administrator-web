@@ -12,25 +12,53 @@
 
     <el-table-column prop="address" label="操作" width="180" align="center">
       <template slot-scope="scope">
-        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        <el-button size="mini" @click="openEditDialog(scope.$index, scope.row)">编辑</el-button>
+        <el-button size="mini" type="danger" @click="openDeleteDialog(scope.$index, scope.row)">删除</el-button>
+
+
+
+
+
+        <el-dialog
+          title="编辑"
+          :visible.sync="dialogEditVisible"
+          width="50%">
+
+          <div class="el-dialog-div">
+
+            //省略其他内容
+          </div >
+
+          <span slot="footer" class="dialog-footer">
+              <el-button @click="closeEditDialog">取 消</el-button>
+              <el-button type="primary" @click="closeEditDialog">确 定</el-button>
+            </span>
+        </el-dialog>
+
       </template>
     </el-table-column>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogDeleteVisible"
+      width="30%">
+      <h3>这是一段信息</h3>
+
+      <div class="el-dialog-div">
+
+        //省略其他内容
+      </div >
+
+      <span slot="footer" class="dialog-footer">
+              <el-button @click="closeDeleteDialog">取 消</el-button>
+              <el-button type="primary" @click="closeDeleteDialog">确 定</el-button>
+            </span>
+    </el-dialog>
 
     <el-table-column prop="name" label="文章标题" align="center"/>
   </el-table>
 
-  <el-dialog
-    title="提示"
-    :visible.sync="dialogEditVisible"
-    width="30%"
-    :before-close="handleClose">
-    <span>这是一段信息</span>
-    <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
-  </el-dialog>
+
 </template>
 
 <script>
@@ -90,6 +118,7 @@
         }],
 
         dialogEditVisible: false,
+        dialogDeleteVisible: false,
 
         articleDetail: {
           title: 'this is a title',
@@ -98,14 +127,24 @@
       }
     },
     methods: {
-      handleDelete(index, row) {
-
-      },
-      handleEdit(index, row) {
-        this.dialogEditVisible = true
-      },
       submitEdit() {
         this.dialogEditVisible = false
+      },
+
+      openDeleteDialog(index, row) {
+        this.dialogDeleteVisible = true;
+      },
+
+      closeDeleteDialog() {
+        this.dialogDeleteVisible = false;
+      },
+
+      openEditDialog() {
+        this.dialogEditVisible = true;
+      },
+
+      closeEditDialog() {
+        this.dialogEditVisible = false;
       }
     }
   }
@@ -115,4 +154,10 @@
   .el-table td, .el-table th {
     text-align: center;
   }
+
+  .el-dialog-div{
+    height: 60vh;
+    overflow: auto;
+  }
+
 </style>
