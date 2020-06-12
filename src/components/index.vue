@@ -1,58 +1,63 @@
 <template>
-    <el-container class="home-container">
-      <el-header>
-        <span>Gleaners后台管理</span>
-        <div>
-          <span>Admin</span>
-          <el-button type="danger" size="mini">退出</el-button>
-        </div>
-      </el-header>
-      <el-container>
-        <el-aside width="230px">
-          <el-menu
-            default-active="0"
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b">
+  <el-container class="home-container">
+    <el-header>
+      <span>Gleaners后台管理</span>
+      <div>
+        <span>Admin</span>
+        <el-button @click="open" type="danger" size="mini">退出</el-button>
+      </div>
+    </el-header>
+    <el-container>
+      <el-aside width="230px">
+        <el-menu
+          default-active="0"
+          class="el-menu-vertical-demo"
+          @open="handleOpen"
+          @close="handleClose"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
 
-            <el-menu-item index="0" @click="switchMenu(0)">
-              <i class="el-icon-s-home"/>
-              <span slot="title">HOME</span>
-            </el-menu-item>
+          <el-menu-item index="0" @click="switchMenu(0)">
+            <i class="el-icon-s-home"/>
+            <span slot="title">HOME</span>
+          </el-menu-item>
 
-            <el-menu-item index="1" @click="switchMenu(1)">
-              <i class="el-icon-menu"/>
-              <span slot="title">文章管理</span>
-            </el-menu-item>
+          <el-menu-item index="1" @click="switchMenu(1)">
+            <i class="el-icon-menu"/>
+            <span slot="title">文章管理</span>
+          </el-menu-item>
 
-            <el-menu-item index="2" @click="switchMenu(2)">
-              <i class="el-icon-edit-outline"/>
-              <span slot="title">文章发布</span>
-            </el-menu-item>
+          <el-menu-item index="2" @click="switchMenu(2)">
+            <i class="el-icon-edit-outline"/>
+            <span slot="title">文章发布</span>
+          </el-menu-item>
 
-            <el-menu-item index="3" @click="switchMenu(3)">
-              <i class="el-icon-data-analysis"/>
-              <span slot="title">数据统计</span>
-            </el-menu-item>
+          <el-menu-item index="3" @click="switchMenu(3)">
+            <i class="el-icon-data-analysis"/>
+            <span slot="title">数据统计</span>
+          </el-menu-item>
 
-          </el-menu>
-        </el-aside>
+        </el-menu>
+      </el-aside>
 
-        <el-main>
-          <router-view></router-view>
-        </el-main>
-
-      </el-container>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
 
     </el-container>
+
+  </el-container>
 
 </template>
 
 <script>
   export default {
+    data() {
+      return {
+        dialogEditVisible: false,
+      }
+    },
     methods: {
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
@@ -66,32 +71,51 @@
           case 0: {
             console.log('home');
             this.$router.push({
-              path:'/home'
+              path: '/home'
             });
             break
           }
           case 1: {
             console.log('文章管理');
             this.$router.push({
-              path:'/articleManager'
+              path: '/articleManager'
             });
             break
           }
           case 2: {
             console.log('文章发布');
             this.$router.push({
-              path:'/articlePublish'
+              path: '/articlePublish'
             });
             break
           }
           case 3: {
             console.log('数据统计');
             this.$router.push({
-              path:'/dataStatistic'
+              path: '/dataStatistic'
             });
             break
           }
         }
+      },
+
+
+      open() {
+        this.$confirm('确认退出系统?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '已退出！'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消！'
+          });
+        });
       }
     }
   }
