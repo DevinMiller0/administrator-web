@@ -24,7 +24,7 @@
     data() {
       return {
         username: 'hello',
-        password: '',
+        password: 'world',
       };
     },
     methods: {
@@ -32,17 +32,18 @@
         console.log(this.username);
         console.log(this.password);
 
-        this.$axios.get("http://localhost:8080/login", {
-          username: this.username,
-          password: this.password,
+        this.$axios.post("http://localhost:8099/login", {
+          params: {
+            username: this.username,
+            password: this.password,
+          }
         })
-        .then(function (response) {
+          .then(function (response) {
+            console.log(response.data.toString())
+          })
+          .catch(function (error) {
 
-        })
-        .catch(function (error) {
-
-        })
-
+          })
       }
     }
   }
