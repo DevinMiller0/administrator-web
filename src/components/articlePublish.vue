@@ -1,35 +1,27 @@
 <template>
-  <el-row class="article-pub-container">
-    <el-col :span="16">
-      <div class="grid-content bg-purple">
-        <el-input class="editor" type="textarea" placeholder="请输入内容" v-model="textarea">
-        </el-input>
-      </div>
-    </el-col>
+  <div class="publish-container">
+    <div class="category-container">
+      <span>标题:</span>
+      <el-input class="input-title" v-model="articleTitle" placeholder="请输入文章标题"/>
 
-    <el-col :span="8">
-      <div class="grid-content bg-purple-light info">
-        <div class="category-container">
-          <span>文章分类</span>
-          <el-select v-model="value" filterable placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
-          <el-select v-model="value" filterable placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
-        </div>
+      <span>文章分类:</span>
+      <el-select v-model="value" filterable placeholder="请选择">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+      </el-select>
+      <el-select v-model="value" filterable placeholder="请选择">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+      </el-select>
 
-        <div class="input-title">
-          <el-input v-model="articleTitle" placeholder="请输入文章标题"/>
-        </div>
+      <el-button type="primary" size="medium">保存并发布</el-button>
+      <el-button type="success" size="medium">保存为草稿</el-button>
+    </div>
 
-        <div class="article-btn">
-          <el-button type="primary" size="medium">保存并发布</el-button>
-          <el-button type="success" size="medium">保存为草稿</el-button>
-        </div>
-      </div>
-    </el-col>
-  </el-row>
+    <div class="editor-container">
+
+      <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -47,14 +39,9 @@
         }, {
           value: '选项3',
           label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
         }],
-        value: ''
+        value: '',
+        editorValue: ''
       }
     },
     methods: {
@@ -65,60 +52,37 @@
         console.log(this.articleTitle)
       }
     },
-    watch:{
+    watch: {
       'articleTitle': {
-        handler:function () {
+        handler: function () {
           this.save();
         }
       }
-    }
+    },
+
   }
 
 </script>
 
 <style scoped>
-  .bg-purple {
-    background: #d3dce6;
+  .input-title {
+    width: 500px;
   }
 
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-
-  .grid-content {
-    border-radius: 2px;
+  .editor-container {
+    border: 1px solid #ffffff;
     height: 100%;
-  }
-
-  .article-pub-container {
-    display: flex;
-    height: 100%;
+    margin-top: 10px;
   }
 
   .editor {
-    height: 500px;
+    height: 100%;
   }
 
-  .el-select {
-    width: 215px;
+  .publish-container {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
   }
-
-  .article-btn {
-    padding-top: 15px;
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
-  .category-container {
-    padding-top: 15px;
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
-  .input-title {
-    padding-top: 15px;
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
 </style>

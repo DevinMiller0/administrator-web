@@ -46,23 +46,16 @@
 
         </el-table-column>
 
-        <el-dialog
-          title="编辑"
-          :append-to-body="true"
-          :visible.sync="dialogEditVisible"
-          width="57%"
-          custom-class="edit-dialog"
-        >
+        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="57%" custom-class="edit-dialog">
 
           <div class="el-dialog-div">
-
             //省略其他内容
           </div>
 
           <span slot="footer" class="dialog-footer">
               <el-button @click="closeEditDialog">取 消</el-button>
               <el-button type="primary" @click="closeEditDialog">确 定</el-button>
-            </span>
+          </span>
         </el-dialog>
 
         <el-table-column prop="name" label="文章标题" align="center"/>

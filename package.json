@@ -13,9 +13,12 @@
     "axios": "^0.19.2",
     "element-ui": "^2.13.2",
     "iview": "^1.0.1",
+    "mavon-editor": "^2.9.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.5",
-    "vue-router": "^3.0.1"
+    "vue-meditor": "^2.1.1",
+    "vue-router": "^3.0.1",
+    "highlight.js": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
