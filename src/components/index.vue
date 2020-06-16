@@ -10,7 +10,7 @@
     <el-container>
       <el-aside width="230px">
         <el-menu
-          default-active="0"
+          :default-active="$route.name"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
@@ -18,22 +18,22 @@
           text-color="#fff"
           active-text-color="#ffd04b">
 
-          <el-menu-item index="0" @click="switchMenu(0)">
+          <el-menu-item index="home" @click="switchMenu(0)">
             <i class="el-icon-s-home"/>
             <span slot="title">HOME</span>
           </el-menu-item>
 
-          <el-menu-item index="1" @click="switchMenu(1)">
+          <el-menu-item index="articleManager" @click="switchMenu(1)">
             <i class="el-icon-menu"/>
             <span slot="title">文章管理</span>
           </el-menu-item>
 
-          <el-menu-item index="2" @click="switchMenu(2)">
+          <el-menu-item index="articlePublish" @click="switchMenu(2)">
             <i class="el-icon-edit-outline"/>
             <span slot="title">文章发布</span>
           </el-menu-item>
 
-          <el-menu-item index="3" @click="switchMenu(3)">
+          <el-menu-item index="dataStatistic" @click="switchMenu(3)">
             <i class="el-icon-data-analysis"/>
             <span slot="title">数据统计</span>
           </el-menu-item>
@@ -42,7 +42,7 @@
       </el-aside>
 
       <el-main>
-        <router-view></router-view>
+        <router-view/>
       </el-main>
 
     </el-container>
@@ -143,4 +143,13 @@
     height: 100%;
   }
 
+
+
+</style>
+
+<style>
+  .el-menu-item.is-active {
+    color: #6681FA;
+    background-color: #6e7278 !important;
+  }
 </style>

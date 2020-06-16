@@ -16,21 +16,16 @@ export default new Router({
       name: 'index',
       component: index,
       children: [
-        {path: '/home', component: home},
-        {path: '/articleManager', component: articleManager},
-        {path: '/articlePublish', component: articlePublish},
-        {path: '/dataStatistic', component: dataStatistic},
-        ]
+        {path: '/home', component: home, name: 'home'},
+        {path: '/articleManager', component: articleManager, name: 'articleManager'},
+        {path: '/articlePublish', component: articlePublish, name: 'articlePublish'},
+        {path: '/dataStatistic', component: dataStatistic, name: 'dataStatistic'},
+      ]
     },
     {
       path: '/login',
       name: 'login',
       component: login
-    },
-    {
-      path: '/articleManager',
-      name: 'articleManager',
-      component: articleManager,
     }
   ]
 })
