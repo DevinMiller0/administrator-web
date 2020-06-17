@@ -29,20 +29,23 @@
     },
     methods: {
       login() {
+
+        if (this.username === '' || this.password === '') {
+          this.$message.error('账号或密码不能为空');
+          return;
+        }
         console.log(this.username);
         console.log(this.password);
 
         this.$axios.post("http://localhost:8099/login", {
-          params: {
-            username: this.username,
-            password: this.password,
-          }
+          username: this.username,
+          password: this.password,
         })
           .then(function (response) {
             console.log(response.data.toString())
+            this.$router.push({path: '/'})
           })
           .catch(function (error) {
-
           })
       }
     }

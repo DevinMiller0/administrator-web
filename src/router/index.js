@@ -6,6 +6,7 @@ import dataStatistic from "../components/dataStatistic";
 import articleManager from "../components/articleManager";
 import home from "../components/home";
 import articlePublish from "../components/articlePublish";
+import categoryManager from "../components/categoryManager";
 
 Vue.use(Router);
 
@@ -20,6 +21,7 @@ export default new Router({
         {path: '/articleManager', component: articleManager, name: 'articleManager'},
         {path: '/articlePublish', component: articlePublish, name: 'articlePublish'},
         {path: '/dataStatistic', component: dataStatistic, name: 'dataStatistic'},
+        {path: '/categoryManager', component: categoryManager, name: 'categoryManager'},
       ]
     },
     {

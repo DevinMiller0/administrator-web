@@ -38,6 +38,11 @@
             <span slot="title">数据统计</span>
           </el-menu-item>
 
+          <el-menu-item index="categoryManager" @click="switchMenu(4)">
+            <i class="el-icon-files"/>
+            <span slot="title">分类管理</span>
+          </el-menu-item>
+
         </el-menu>
       </el-aside>
 
@@ -93,6 +98,14 @@
             console.log('数据统计');
             this.$router.push({
               path: '/dataStatistic'
+            });
+            break
+          }
+
+          case 4: {
+            console.log('数据统计');
+            this.$router.push({
+              path: '/categoryManager'
             });
             break
           }
