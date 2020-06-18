@@ -29,6 +29,8 @@
     },
     methods: {
       login() {
+        this.$router.push({path: '/'})
+
 
         if (this.username === '' || this.password === '') {
           this.$message.error('账号或密码不能为空');
@@ -43,7 +45,7 @@
         })
           .then(function (response) {
             console.log(response.data.toString())
-            this.$router.push({path: '/'})
+            this.$router.push('/')
           })
           .catch(function (error) {
           })

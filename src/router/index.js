@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import index from "../components/index";
-import login from "../components/login";
-import dataStatistic from "../components/dataStatistic";
-import articleManager from "../components/articleManager";
-import home from "../components/home";
-import articlePublish from "../components/articlePublish";
-import categoryManager from "../components/categoryManager";
+import index from "../components/Index";
+import login from "../components/Login";
+import dataStatistic from "../components/DataStatistic";
+import articleManager from "../components/ArticleManager";
+import home from "../components/Home";
+import articlePublish from "../components/ArticlePublish";
+import categoryManager from "../components/CategoryManager";
 
 Vue.use(Router);
 
