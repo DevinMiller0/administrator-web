@@ -44,8 +44,11 @@
           password: this.password,
         })
           .then(function (response) {
-            console.log(response.data.toString())
-            this.$router.push('/')
+            let resp = response.data;
+            console.log(resp);
+            if (resp.code === 200) {
+              this.$router.push('/')
+            }
           })
           .catch(function (error) {
           })
