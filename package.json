@@ -18,7 +18,8 @@
     "vue-axios": "^2.1.5",
     "vue-meditor": "^2.1.1",
     "vue-router": "^3.0.1",
-    "highlight.js": "latest"
+    "highlight.js": "latest",
+    "qs": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -56,7 +57,8 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0",
-    "axios": "latest"
+    "axios": "latest",
+    "qs": "latest"
   },
   "engines": {
     "node": ">= 6.0.0",

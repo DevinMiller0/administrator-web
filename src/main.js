@@ -5,7 +5,8 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import Axios from 'axios';
+import axios from 'axios';
+import qs from 'qs'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css';
 // Vue-cli生成的工程文件的src/main.js
@@ -21,11 +22,22 @@ Vue.directive('highlight', function (el) {
   })
 });
 
+axios.defaults.baseURL = 'http://localhost:8099/';
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = window.sessionStorage.getItem('token');
+  if (config.method === "post") {
+    config.data = qs.stringify(config.data);
+    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    console.log(config);
+  }
+  return config;
+});
+
 
 Vue.use(mavonEditor);
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
-Vue.prototype.$axios = Axios;
+Vue.prototype.$axios = axios;
 
 /* eslint-disable no-new */
 new Vue({
