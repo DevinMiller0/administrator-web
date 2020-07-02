@@ -138,6 +138,9 @@
         this.loadTableData();
       },
 
+      /**
+       * loading data table
+       */
       loadTableData() {
         const self = this;
         if (self.pagination.currentPage === 0) {
@@ -149,14 +152,19 @@
         }).then(function (response) {
           let d = response.data.data;
           self.tableData = d.list;
-          self.pagination.total = d.navigatePages;
-          self.pagination.pageSize = d.size;
+          self.pagination.total = d.total;
+          self.pagination.pageSize = d.pageSize;
           console.log(self.tableData)
         }).catch(function (error) {
           console.log("failed: " + error)
         })
       },
 
+      /**
+       * modify state of data
+       * @param state specific the state
+       * @param id data for state
+       */
       modifyState(state, id) {
         this.$axios.post("setState", {
           state: state,
@@ -168,6 +176,9 @@
         })
       },
 
+      /**
+       * loading category
+       */
       loadCategory() {
         const self = this;
         this.$axios.get("getCategory")
@@ -175,7 +186,7 @@
             console.log(response.data);
             self.languages = response.data.data;
           }).catch(function (error) {
-          console.log('failed to getCategory')
+            console.log('failed to getCategory')
         })
       },
     }

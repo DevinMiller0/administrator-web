@@ -4,13 +4,13 @@
       <h2 class="text-login">LOGIN</h2>
       <el-form ref="form" class="login-form">
         <el-form-item>
-          <el-input v-model="username" type="text" placeholder="请输入用户名"/>
+          <el-input v-model="username" type="text" name="username" placeholder="请输入用户名"/>
         </el-form-item>
         <el-form-item>
           <el-input v-model="password" type="password" placeholder="请输入密码"/>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn-login" @click="login" type="primary">登录</el-button>
+          <el-button class="btn-login" @click="login" name="password" type="primary">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
