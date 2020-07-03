@@ -1,24 +1,23 @@
 <template>
 
   <div>
-
     <div id="category-container">
-      <el-form :inline="true" :model="categoryQuery" class="demo-form-inline">
+      <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="语言">
-          <el-select v-model="categoryQuery.language" placeholder="请选择类型">
-            <el-option v-for="item in languages" :label="item.categoryName" :key="item.cid" :value="item.value"/>
+          <el-select @change="selectChange" v-model="c1" placeholder="请选择类型">
+            <el-option v-for="item in category" :label="item.categoryName" :key="item.cid" :value="item.cid"/>
           </el-select>
         </el-form-item>
         <el-form-item label="类型">
-          <el-select v-model="categoryQuery.region" placeholder="请选择类型">
-            <el-option v-for="item in languages" :label="item.label" :key="item.value" :value="item.value"/>
+          <el-select v-model="c2" placeholder="请选择类型">
+            <el-option v-for="item in category2" :label="item.name" :key="item.c2id" :value="item.c2id"/>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="selectArticle">查询</el-button>
+          <el-button type="primary" @click="selectAllArticle">all</el-button>
         </el-form-item>
       </el-form>
-
     </div>
 
     <div id="content-container">
@@ -34,7 +33,13 @@
 
         <el-table-column prop="views" label="浏览量" width="80" align="center"/>
 
-        <el-table-column prop="address" label="操作" width="180" align="center">
+        <el-table-column label="分类" width="180" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.category +' / '+ scope.row.category2}}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="dialogEditVisible = true">编辑</el-button>
             <el-button size="mini" type="danger" @click="deleteArticle">删除</el-button>
@@ -51,6 +56,7 @@
               <el-button type="primary" @click="closeEditDialog">确 定</el-button>
           </span>
         </el-dialog>
+
         <el-table-column prop="title" label="文章标题" align="center"/>
       </el-table>
     </div>
@@ -79,7 +85,7 @@
 
         articleDetail: {
           title: 'this is a title',
-          content: 'fasdf sasgtgrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr4'
+          content: 'fasdf '
         },
 
         categoryQuery: {
@@ -93,8 +99,10 @@
           currentPage: 0,
         },
 
-        languages: [],
-        value: '',
+        category: [],
+        c1: '',
+        c2: '',
+        category2: [],
       }
     },
 
@@ -128,9 +136,17 @@
         });
       },
 
-      //查询
+      /**
+       *
+       */
       selectArticle() {
-        console.log(this.categoryQuery.language + "  " + this.categoryQuery.type)
+        this.loadTableData();
+      },
+
+      selectAllArticle() {
+        this.c2 = '';
+        this.c1 = '';
+        this.loadTableData();
       },
 
       handleCurrentChange(val) {
@@ -148,7 +164,9 @@
         }
 
         this.$axios.post("getArticle", {
-          pageNum: self.pagination.currentPage
+          pageNum: self.pagination.currentPage,
+          cid: self.c1,
+          c2id: self.c2
         }).then(function (response) {
           let d = response.data.data;
           self.tableData = d.list;
@@ -184,11 +202,29 @@
         this.$axios.get("getCategory")
           .then(function (response) {
             console.log(response.data);
-            self.languages = response.data.data;
+            self.category = response.data.data;
           }).catch(function (error) {
-            console.log('failed to getCategory')
+          console.log('failed to getCategory')
         })
       },
+
+      /**
+       * category change
+       */
+      selectChange(value) {
+        console.log(value);
+        const self = this;
+        self.c2 = '';
+        this.$axios.post("getCategory2", {
+          cid: value
+        })
+          .then(function (response) {
+            console.log(response.data);
+            self.category2 = response.data.data;
+          }).catch(function (error) {
+          console.log('failed to getCategory')
+        })
+      }
     }
   }
 </script>
