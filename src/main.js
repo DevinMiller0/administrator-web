@@ -23,15 +23,29 @@ Vue.directive('highlight', function (el) {
 });
 
 axios.defaults.baseURL = 'http://localhost:8099/';
-axios.interceptors.request.use(config => {
-  config.headers.Authorization = window.sessionStorage.getItem('token');
-  if (config.method === "post") {
-    config.data = qs.stringify(config.data);
-    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    console.log(config);
+axios.interceptors.request.use(
+  config => {
+    config.headers.Authorization = window.localStorage.getItem('token');
+    if (config.method === "post") {
+      config.data = qs.stringify(config.data);
+      config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      console.log(config);
+    }
+    return config;
+  });
+
+axios.interceptors.response.use(
+  response => {
+    let code = response.data.code;
+    if (code === 4001) {
+      router.push("/login");
+    }
+    return response;
+  },
+  error => {
+
   }
-  return config;
-});
+);
 
 
 Vue.use(mavonEditor);

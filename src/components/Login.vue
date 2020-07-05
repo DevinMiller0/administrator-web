@@ -23,23 +23,18 @@
   export default {
     data() {
       return {
-        username: 'hello',
-        password: 'world',
+        username: 'admin',
+        password: 'admin',
       };
     },
     methods: {
       login() {
-        this.$router.push({path: '/'})
-
-
+        let self = this;
         if (this.username === '' || this.password === '') {
           this.$message.error('账号或密码不能为空');
           return;
         }
-        console.log(this.username);
-        console.log(this.password);
-
-        this.$axios.post("http://localhost:8099/login", {
+        this.$axios.post("login", {
           username: this.username,
           password: this.password,
         })
@@ -47,10 +42,21 @@
             let resp = response.data;
             console.log(resp);
             if (resp.code === 200) {
-              this.$router.push('/')
+              let token = resp.data.token;
+              window.localStorage.setItem("token", token);
+              self.$router.push('/')
+            } else {
+              self.$message({
+                type: 'warning',
+                message: '登录失败!'
+              });
             }
           })
           .catch(function (error) {
+            self.$message({
+              type: 'warning',
+              message: '登录失败!'
+            });
           })
       }
     }

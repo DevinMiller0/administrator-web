@@ -35,7 +35,7 @@
 
         <el-table-column label="分类" width="180" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.category +' / '+ scope.row.category2}}</span>
+            <span >{{scope.row.category +' / '+ scope.row.category2}}</span>
           </template>
         </el-table-column>
 

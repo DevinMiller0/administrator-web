@@ -4,7 +4,7 @@
       <span>Gleaners后台管理</span>
       <div>
         <span>Admin</span>
-        <el-button @click="open" type="danger" size="mini">退出</el-button>
+        <el-button @click="logout" type="danger" size="mini">退出</el-button>
       </div>
     </el-header>
     <el-container>
@@ -113,12 +113,16 @@
       },
 
 
-      open() {
+      logout() {
         this.$confirm('确认退出系统?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          window.localStorage.setItem("token", "");
+          this.$router.push({
+            path:'/login'
+          });
           this.$message({
             type: 'success',
             message: '已退出！'
@@ -130,7 +134,7 @@
           });
         });
       }
-    }
+    },
   }
 </script>
 
