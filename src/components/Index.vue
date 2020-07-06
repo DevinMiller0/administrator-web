@@ -3,7 +3,7 @@
     <el-header>
       <span>Gleaners后台管理</span>
       <div>
-        <span>Admin</span>
+        <span>{{username}}</span>
         <el-button @click="logout" type="danger" size="mini">退出</el-button>
       </div>
     </el-header>
@@ -61,6 +61,7 @@
     data() {
       return {
         dialogEditVisible: false,
+        username: '',
       }
     },
     methods: {
@@ -112,16 +113,16 @@
         }
       },
 
-
       logout() {
         this.$confirm('确认退出系统?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          window.localStorage.setItem("token", "");
+          window.localStorage.setItem("token", '');
+          window.localStorage.setItem("username", '');
           this.$router.push({
-            path:'/login'
+            path: '/login'
           });
           this.$message({
             type: 'success',
@@ -135,6 +136,10 @@
         });
       }
     },
+
+    created() {
+      this.username = window.localStorage.getItem("username");
+    }
   }
 </script>
 
@@ -159,7 +164,6 @@
   .home-container {
     height: 100%;
   }
-
 
 
 </style>

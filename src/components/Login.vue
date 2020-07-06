@@ -24,7 +24,7 @@
     data() {
       return {
         username: 'admin',
-        password: 'admin',
+        password: '111',
       };
     },
     methods: {
@@ -43,7 +43,9 @@
             console.log(resp);
             if (resp.code === 200) {
               let token = resp.data.token;
+              let username = resp.data.username;
               window.localStorage.setItem("token", token);
+              window.localStorage.setItem("username", username);
               self.$router.push('/')
             } else {
               self.$message({
@@ -58,6 +60,13 @@
               message: '登录失败!'
             });
           })
+      }
+    },
+    created() {
+      let token = window.localStorage.getItem("token");
+      let username = window.localStorage.getItem("username");
+      if (token !== '' || username !== '') {
+        this.$router.push("/ArticleManager")
       }
     }
   }

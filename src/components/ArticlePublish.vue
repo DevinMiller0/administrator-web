@@ -5,11 +5,12 @@
       <el-input class="input-title" v-model="articleTitle" placeholder="请输入文章标题"/>
 
       <span>文章分类:</span>
-      <el-select v-model="value" filterable placeholder="请选择">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+      <el-select @change="selectChange" v-model="option1" filterable placeholder="请选择">
+        <el-option v-for="item in options1" :label="item.categoryName" :key="item.cid" :value="item.cid"/>
       </el-select>
-      <el-select v-model="value" filterable placeholder="请选择">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+
+      <el-select v-model="option2" filterable placeholder="请选择">
+        <el-option v-for="item in options2" :label="item.name" :key="item.c2id" :value="item.c2id"/>
       </el-select>
 
       <el-button type="primary" size="medium">保存并发布</el-button>
@@ -17,7 +18,6 @@
     </div>
 
     <div class="editor-container">
-
       <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
     </div>
 
@@ -30,27 +30,51 @@
       return {
         textarea: '',
         articleTitle: '',
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }],
+        options1: [],
+        options2: [],
+        option1: '',
+        option2: '',
         value: '',
         editorValue: ''
       }
     },
     methods: {
-      submit() {
-
-      },
       save() {
         console.log(this.articleTitle)
-      }
+      },
+
+      /**
+       * loading category
+       */
+      loadCategory() {
+        const self = this;
+        this.$axios.get("getCategory")
+          .then(function (response) {
+            console.log(response.data);
+            self.options1 = response.data.data;
+          }).catch(function (error) {
+          console.log('failed to getCategory')
+        })
+      },
+
+      /**
+       * category change
+       */
+      selectChange(value) {
+        console.log(value);
+        const self = this;
+        self.option2 = '';
+        this.$axios.post("getCategory2", {
+          cid: value
+        })
+          .then(function (response) {
+            console.log(response.data);
+            self.options2 = response.data.data;
+          })
+          .catch(function (error) {
+            console.log('failed to getCategory')
+          })
+      },
     },
     watch: {
       'articleTitle': {
@@ -60,6 +84,9 @@
       }
     },
 
+    created() {
+      this.loadCategory();
+    },
   }
 
 </script>

@@ -35,7 +35,7 @@
 
         <el-table-column label="分类" width="180" align="center">
           <template slot-scope="scope">
-            <span >{{scope.row.category +' / '+ scope.row.category2}}</span>
+            <span>{{scope.row.category +' / '+ scope.row.category2}}</span>
           </template>
         </el-table-column>
 
@@ -203,9 +203,10 @@
           .then(function (response) {
             console.log(response.data);
             self.category = response.data.data;
-          }).catch(function (error) {
-          console.log('failed to getCategory')
-        })
+          })
+          .catch(function (error) {
+            console.log('failed to getCategory')
+          })
       },
 
       /**
@@ -221,9 +222,10 @@
           .then(function (response) {
             console.log(response.data);
             self.category2 = response.data.data;
-          }).catch(function (error) {
-          console.log('failed to getCategory')
-        })
+          })
+          .catch(function (error) {
+            console.log('failed to getCategory')
+          })
       }
     }
   }
