@@ -13,8 +13,8 @@
         <el-option v-for="item in options2" :label="item.name" :key="item.c2id" :value="item.c2id"/>
       </el-select>
 
-      <el-button type="primary" size="medium">保存并发布</el-button>
-      <el-button type="success" size="medium">保存为草稿</el-button>
+      <el-button type="primary" @click="savePublish(1)" size="medium">保存并发布</el-button>
+      <el-button type="success" @click="savePublish(0)" size="medium">保存为草稿</el-button>
     </div>
 
     <div class="editor-container">
@@ -28,7 +28,6 @@
   export default {
     data() {
       return {
-        textarea: '',
         articleTitle: '',
         options1: [],
         options2: [],
@@ -75,7 +74,26 @@
             console.log('failed to getCategory')
           })
       },
+
+      savePublish(v) {
+        this.$axios.post("publish/saveArticle", {
+          title: this.articleTitle,
+          article: this.editorValue,
+          author: window.localStorage.getItem("username"),
+          author_id: window.localStorage.getItem("aid"),
+          views: 0,
+          category: '',
+          category2: '',
+          cid: '',
+          c2id: '',
+          time: '',
+          description: '',
+          satate: v,
+        })
+      }
     },
+
+
     watch: {
       'articleTitle': {
         handler: function () {

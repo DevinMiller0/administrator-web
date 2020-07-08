@@ -44,8 +44,10 @@
             if (resp.code === 200) {
               let token = resp.data.token;
               let username = resp.data.username;
+              let aid = resp.data.aid;
               window.localStorage.setItem("token", token);
               window.localStorage.setItem("username", username);
+              window.localStorage.setItem("aid", aid);
               self.$router.push('/')
             } else {
               self.$message({
