@@ -43,6 +43,9 @@ axios.interceptors.response.use(
     console.log('interceptors: ' + response);
     let code = response.data.code;
     if (code === 4001) {
+      window.localStorage.setItem("token", "");
+      window.localStorage.setItem("username", "");
+      window.localStorage.setItem("aid", "");
       router.push("/login");
     }
     return response;
