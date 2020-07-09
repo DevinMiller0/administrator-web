@@ -28,7 +28,11 @@ axios.interceptors.request.use(
     config.headers.Authorization = window.localStorage.getItem('token');
     if (config.method === "post") {
       config.data = qs.stringify(config.data);
-      config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      if (config.url === 'publish/saveArticle') {
+        config.headers["Content-Type"] = "application/json";
+      } else {
+        config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      }
       console.log(config);
     }
     return config;
@@ -36,6 +40,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
+    console.log('interceptors: ' + response);
     let code = response.data.code;
     if (code === 4001) {
       router.push("/login");
@@ -43,7 +48,7 @@ axios.interceptors.response.use(
     return response;
   },
   error => {
-
+    console.log('interceptors: ' + error);
   }
 );
 

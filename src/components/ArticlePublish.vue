@@ -5,11 +5,11 @@
       <el-input class="input-title" v-model="articleTitle" placeholder="请输入文章标题"/>
 
       <span>文章分类:</span>
-      <el-select @change="selectChange" v-model="option1" filterable placeholder="请选择">
+      <el-select @change="selectChange" v-model="category" filterable placeholder="请选择">
         <el-option v-for="item in options1" :label="item.categoryName" :key="item.cid" :value="item.cid"/>
       </el-select>
 
-      <el-select v-model="option2" filterable placeholder="请选择">
+      <el-select @change="selectCategory2Change" v-model="category2" filterable placeholder="请选择">
         <el-option v-for="item in options2" :label="item.name" :key="item.c2id" :value="item.c2id"/>
       </el-select>
 
@@ -31,10 +31,12 @@
         articleTitle: '',
         options1: [],
         options2: [],
-        option1: '',
-        option2: '',
+        category: '',
+        category2: '',
         value: '',
-        editorValue: ''
+        editorValue: '',
+        cid: '',
+        c2id: ''
       }
     },
     methods: {
@@ -61,6 +63,7 @@
        */
       selectChange(value) {
         console.log(value);
+        this.cid = value;
         const self = this;
         self.option2 = '';
         this.$axios.post("getCategory2", {
@@ -75,21 +78,86 @@
           })
       },
 
+      /**
+       * category2 change
+       * @param value
+       */
+      selectCategory2Change(value) {
+        this.c2id = value;
+      },
+
       savePublish(v) {
-        this.$axios.post("publish/saveArticle", {
+        let self = this;
+
+        if (this.articleTitle === '') {
+          this.$message({
+            type: 'warning',
+            message: '请输入文章标题!'
+          });
+          return;
+        }
+        if (this.category === '' || this.category2 === '') {
+          this.$message({
+            type: 'warning',
+            message: '请选择分类!'
+          });
+          return;
+        }
+        if (this.editorValue === '') {
+          this.$message({
+            type: 'warning',
+            message: '请输入文章内容!'
+          });
+          return;
+        }
+
+        let data={
           title: this.articleTitle,
           article: this.editorValue,
           author: window.localStorage.getItem("username"),
           author_id: window.localStorage.getItem("aid"),
           views: 0,
-          category: '',
-          category2: '',
-          cid: '',
-          c2id: '',
-          time: '',
+          category: this.category,
+          category2: this.category2,
+          cid: this.cid,
+          c2id: this.c2id,
+          time: this.getCurTime(),
           description: '',
           satate: v,
-        })
+        };
+
+        this.$axios.post("publish/saveArticle", {
+          title: this.articleTitle,
+          article: this.editorValue,
+          author: window.localStorage.getItem("username"),
+          author_id: window.localStorage.getItem("aid"),
+          views: 1,
+          category: this.category,
+          category2: this.category2,
+          cid: this.cid,
+          c2id: this.c2id,
+          time: this.getCurTime(),
+          description: '',
+          satate: v,
+        }).then(function (response) {
+          console.log(response)
+        }).catch(function (error) {
+          console.log(error);
+          self.$message({
+            type: 'success',
+            message: '保存成功'
+          });
+        });
+      },
+
+      getCurTime: function () {
+        let year = new Date().getFullYear();
+        let month = new Date().getMonth() + 1;
+        let day = new Date().getDate();
+        let hour = new Date().getHours();
+        let minutes = new Date().getMinutes();
+        let second = new Date().getSeconds();
+        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + second;
       }
     },
 
