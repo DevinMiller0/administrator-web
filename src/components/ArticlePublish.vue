@@ -141,12 +141,15 @@
         };
 
         this.$axios({
-          headers: {},
+          headers: {
+            'Content-Type': 'application/json'
+          },
           method: 'post',
           url: 'publish/saveArticle',
           data: data,
           transformRequest: [function (data) {
-            return self.$qs.stringify(data);
+            // return self.$qs.stringify(data);
+            return JSON.stringify(data);
           }]
         }).then(function (response) {
           console.log(error);
