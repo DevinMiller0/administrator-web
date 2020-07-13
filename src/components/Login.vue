@@ -34,34 +34,40 @@
           this.$message.error('账号或密码不能为空');
           return;
         }
-        this.$axios.post("login", {
-          username: this.username,
-          password: this.password,
-        })
-          .then(function (response) {
-            let resp = response.data;
-            console.log(resp);
-            if (resp.code === 200) {
-              let token = resp.data.token;
-              let username = resp.data.username;
-              let aid = resp.data.aid;
-              window.localStorage.setItem("token", token);
-              window.localStorage.setItem("username", username);
-              window.localStorage.setItem("aid", aid);
-              self.$router.push('/')
-            } else {
-              self.$message({
-                type: 'warning',
-                message: '登录失败!'
-              });
-            }
-          })
-          .catch(function (error) {
+
+        this.$axios({
+          method: 'post',
+          url: 'login',
+          data: {
+            username: this.username,
+            password: this.password,
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }],
+        }).then(function (response) {
+          let resp = response.data;
+          console.log(resp);
+          if (resp.code === 200) {
+            let token = resp.data.token;
+            let username = resp.data.username;
+            let aid = resp.data.aid;
+            window.localStorage.setItem("token", token);
+            window.localStorage.setItem("username", username);
+            window.localStorage.setItem("aid", aid);
+            self.$router.push('/')
+          } else {
             self.$message({
               type: 'warning',
               message: '登录失败!'
             });
-          })
+          }
+        }).catch(function () {
+          self.$message({
+            type: 'warning',
+            message: '登录失败!'
+          });
+        });
       }
     },
     created() {

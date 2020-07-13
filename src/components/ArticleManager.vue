@@ -163,10 +163,17 @@
           self.pagination.currentPage = 1;
         }
 
-        this.$axios.post("getArticle", {
-          pageNum: self.pagination.currentPage,
-          cid: self.c1,
-          c2id: self.c2
+        this.$axios({
+          method: 'post',
+          url: 'getArticle',
+          data: {
+            pageNum: self.pagination.currentPage,
+            cid: self.c1,
+            c2id: self.c2
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }]
         }).then(function (response) {
           let d = response.data.data;
           self.tableData = d.list;
@@ -175,7 +182,7 @@
           console.log(self.tableData)
         }).catch(function (error) {
           console.log("failed: " + error)
-        })
+        });
       },
 
       /**
@@ -184,9 +191,16 @@
        * @param id data for state
        */
       modifyState(state, id) {
-        this.$axios.post("setState", {
-          state: state,
-          id: id
+        this.$axios({
+          method: 'post',
+          url: 'setState',
+          data: {
+            state: state,
+            id: id
+          },
+          transformRequest: [function (data) {
+            return this.$qs.stringify(data);
+          }]
         }).then(function (response) {
           console.log(response.data)
         }).catch(function (error) {
@@ -199,14 +213,15 @@
        */
       loadCategory() {
         const self = this;
-        this.$axios.get("getCategory")
-          .then(function (response) {
-            console.log(response.data);
-            self.category = response.data.data;
-          })
-          .catch(function (error) {
-            console.log('failed to getCategory')
-          })
+        this.$axios({
+          type: 'get',
+          url: 'getCategory',
+        }).then(function (response) {
+          console.log(response.data);
+          self.category = response.data.data;
+        }).catch(function (error) {
+          console.log('failed to getCategory')
+        })
       },
 
       /**
@@ -216,16 +231,22 @@
         console.log(value);
         const self = this;
         self.c2 = '';
-        this.$axios.post("getCategory2", {
-          cid: value
+
+        this.$axios({
+          method: 'post',
+          url: 'getCategory2',
+          data: {
+            cid: value
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }],
+        }).then(function (response) {
+          console.log(response.data);
+          self.category2 = response.data.data;
+        }).catch(function (error) {
+          console.log('failed to getCategory ' + error);
         })
-          .then(function (response) {
-            console.log(response.data);
-            self.category2 = response.data.data;
-          })
-          .catch(function (error) {
-            console.log('failed to getCategory')
-          })
       }
     }
   }

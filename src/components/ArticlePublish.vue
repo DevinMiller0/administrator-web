@@ -66,16 +66,30 @@
         this.cid = value;
         const self = this;
         self.option2 = '';
-        this.$axios.post("getCategory2", {
-          cid: value
-        })
-          .then(function (response) {
-            console.log(response.data);
-            self.options2 = response.data.data;
-          })
-          .catch(function (error) {
-            console.log('failed to getCategory')
-          })
+        // this.$axios.post("getCategory2", {
+        //   cid: value
+        // }).then(function (response) {
+        //   console.log(response.data);
+        //   self.options2 = response.data.data;
+        // }).catch(function (error) {
+        //   console.log('failed to getCategory')
+        // });
+
+        this.$axios({
+          method: 'post',
+          url: 'getCategory2',
+          data: {
+            cid: value
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data)
+          }]
+        }).then(function (response) {
+          console.log(response.data);
+          self.options2 = response.data.data;
+        }).catch(function (error) {
+          console.log('failed to getCategory')
+        });
       },
 
       /**
@@ -111,7 +125,7 @@
           return;
         }
 
-        let data={
+        let data = {
           title: this.articleTitle,
           article: this.editorValue,
           author: window.localStorage.getItem("username"),
@@ -126,28 +140,47 @@
           satate: v,
         };
 
-        this.$axios.post("publish/saveArticle", {
-          title: this.articleTitle,
-          article: this.editorValue,
-          author: window.localStorage.getItem("username"),
-          author_id: window.localStorage.getItem("aid"),
-          views: 1,
-          category: this.category,
-          category2: this.category2,
-          cid: this.cid,
-          c2id: this.c2id,
-          time: this.getCurTime(),
-          description: '',
-          satate: v,
+        this.$axios({
+          headers: {},
+          method: 'post',
+          url: 'publish/saveArticle',
+          data: data,
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }]
         }).then(function (response) {
-          console.log(response)
-        }).catch(function (error) {
           console.log(error);
           self.$message({
             type: 'success',
             message: '保存成功'
           });
-        });
+          console.log(response.data)
+        }).catch(function (error) {
+          console.log('failed to save article ' + error)
+        })
+
+        // this.$axios.post("publish/saveArticle", {
+        //   title: this.articleTitle,
+        //   article: this.editorValue,
+        //   author: window.localStorage.getItem("username"),
+        //   author_id: window.localStorage.getItem("aid"),
+        //   views: 1,
+        //   category: this.category,
+        //   category2: this.category2,
+        //   cid: this.cid,
+        //   c2id: this.c2id,
+        //   time: this.getCurTime(),
+        //   description: '',
+        //   satate: v,
+        // }).then(function (response) {
+        //   console.log(response)
+        // }).catch(function (error) {
+        //   console.log(error);
+        //   self.$message({
+        //     type: 'success',
+        //     message: '保存成功'
+        //   });
+        // });
       },
 
       getCurTime: function () {
