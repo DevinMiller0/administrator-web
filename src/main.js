@@ -26,16 +26,6 @@ axios.defaults.baseURL = 'http://localhost:8099/';
 axios.interceptors.request.use(
   config => {
     config.headers.Authorization = window.localStorage.getItem('token');
-    // if (config.method === "post") {
-    //   config.data = qs.stringify(config.data);
-    //   if (config.url === 'publish/saveArticle') {
-    //     config.headers["Content-Type"] = "application/json;charset-UTF-8";
-    //   } else {
-    //     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    //   }
-    //   console.log(config);
-    //   console.log("data: " + config.data)
-    // }
     return config;
   });
 

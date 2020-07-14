@@ -41,19 +41,19 @@
 
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="dialogEditVisible = true">编辑</el-button>
-            <el-button size="mini" type="danger" @click="deleteArticle">删除</el-button>
+            <el-button size="mini" @click="editClick(scope.row.id)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="deleteArticle(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
 
-        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="57%"
+        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%"
                    custom-class="edit-dialog">
           <div class="el-dialog-div">
-            <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
+            <mavon-editor :ishljs="true" scrollStyle="true" v-highlight class="editor" v-model="editorValue"/>
           </div>
           <span slot="footer" class="dialog-footer">
               <el-button @click="closeEditDialog">取 消</el-button>
-              <el-button type="primary" @click="closeEditDialog">确 定</el-button>
+              <el-button type="primary" @click="certainEditDialog">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -62,13 +62,12 @@
     </div>
 
     <div class="page-container">
-      <el-pagination @current-change="handleCurrentChange" :page-size="pagination.pageSize" :total="pagination.total"
+      <el-pagination @current-change="handleCurrentChange"
+                     :page-size="pagination.pageSize"
+                     :total="pagination.total"
                      layout="total, prev, pager, next, jumper"/>
     </div>
-
   </div>
-
-
 </template>
 
 <script>
@@ -83,16 +82,6 @@
         dialogEditVisible: false,
         dialogDeleteVisible: false,
 
-        articleDetail: {
-          title: 'this is a title',
-          content: 'fasdf '
-        },
-
-        categoryQuery: {
-          language: '',
-          type: '',
-        },
-
         pagination: {
           total: 0,
           pageSize: 0,
@@ -100,9 +89,11 @@
         },
 
         category: [],
+        category2: [],
         c1: '',
         c2: '',
-        category2: [],
+
+        editArticleId: '',
       }
     },
 
@@ -117,17 +108,53 @@
         this.dialogEditVisible = false;
       },
 
+      //编辑后确认提交
+      certainEditDialog() {
+        let self = this;
+        this.$axios({
+          method: 'post',
+          url: 'updateArticle',
+          data: {
+            id: self.editArticleId,
+            article: self.editorValue,
+          },
+        }).then(function (response) {
+          console.log(response.data);
+          self.dialogEditVisible = false;
+        }).catch(function (error) {
+          console.log(error);
+        })
+      },
+
       //删除
-      deleteArticle() {
+      deleteArticle(id) {
+        let self = this;
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          this.$axios({
+            method: 'post',
+            url: 'deleteArticle',
+            data: {
+              articleId: id
+            },
+            transformRequest:[function (data) {
+              return self.$qs.stringify(data)
+            }]
+          }).then(function (response) {
+            if (response.data.code === 200) {
+              self.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              self.loadTableData();
+            }
+          }).catch(function (error) {
+            console.log('删除失败：' + error)
           });
+
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -136,9 +163,7 @@
         });
       },
 
-      /**
-       *
-       */
+      //查询分类的文章列表
       selectArticle() {
         this.loadTableData();
       },
@@ -247,6 +272,36 @@
         }).catch(function (error) {
           console.log('failed to getCategory ' + error);
         })
+      },
+
+      //点击编辑按钮
+      editClick(id) {
+        console.log('文章id：' + id);
+        this.editArticleId = id;
+
+        let self = this;
+        this.$axios({
+          method: 'post',
+          url: 'getArticleById',
+          data: {
+            articleId: id
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data)
+          }]
+        }).then(function (response) {
+
+          let data = response.data;
+
+          console.log(data);
+          console.log('article: ' + data.data.article);
+
+          self.editorValue = data.data.article;
+          self.dialogEditVisible = true;
+
+        }).catch(function (error) {
+          console.log('请求失败：' + error)
+        });
       }
     }
   }
@@ -258,7 +313,8 @@
   }
 
   .el-dialog-div {
-    height: 100%;
+    /*height: 100%;*/
+    height: 740px;
     overflow: auto;
     border: 1px solid rgba(100, 182, 255, 0.53);
     border-radius: 3px;
@@ -302,6 +358,7 @@
   }
 
   .editor {
+    min-height: 600px;
     height: 100%;
   }
 

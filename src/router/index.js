@@ -7,6 +7,7 @@ import articleManager from "../components/ArticleManager";
 import home from "../components/Home";
 import articlePublish from "../components/ArticlePublish";
 import categoryManager from "../components/CategoryManager";
+import TestPage from "../components/TestPage";
 
 Vue.use(Router);
 
@@ -28,6 +29,12 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: login
-    }
+    },
+     {
+      path: '/test',
+      name: 'test',
+      component: TestPage
+    },
+
   ]
 })

@@ -5,12 +5,18 @@
       <el-input class="input-title" v-model="articleTitle" placeholder="请输入文章标题"/>
 
       <span>文章分类:</span>
-      <el-select @change="selectChange" v-model="category" filterable placeholder="请选择">
-        <el-option v-for="item in options1" :label="item.categoryName" :key="item.cid" :value="item.cid"/>
+      <el-select v-model="c1" @change="selectChange" filterable placeholder="请选择">
+        <el-option v-for="item in options1"
+                   :label="item.categoryName"
+                   :key="item.cid"
+                   :value="{value:item.cid,label:item.categoryName}"/>
       </el-select>
 
-      <el-select @change="selectCategory2Change" v-model="category2" filterable placeholder="请选择">
-        <el-option v-for="item in options2" :label="item.name" :key="item.c2id" :value="item.c2id"/>
+      <el-select v-model="c2" @change="selectCategory2Change" filterable placeholder="请选择">
+        <el-option v-for="item in options2"
+                   :label="item.name"
+                   :key="item.c2id"
+                   :value="{value:item.c2id,label:item.name}"/>
       </el-select>
 
       <el-button type="primary" @click="savePublish(1)" size="medium">保存并发布</el-button>
@@ -18,7 +24,11 @@
     </div>
 
     <div class="editor-container">
-      <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
+      <mavon-editor
+        :ishljs="true"
+        v-model="editorValue"
+        class="editor"
+        :scrollStyle="true" />
     </div>
 
   </div>
@@ -33,10 +43,13 @@
         options2: [],
         category: '',
         category2: '',
-        value: '',
         editorValue: '',
         cid: '',
-        c2id: ''
+        c2id: '',
+
+        //no use
+        c1:'',
+        c2:''
       }
     },
     methods: {
@@ -61,20 +74,14 @@
       /**
        * category change
        */
-      selectChange(value) {
-        console.log(value);
+      selectChange(params) {
+        const {value, label} = params;
         this.cid = value;
+        this.category = label;
+        console.log(this.cid + '  ' + this.category);
+
         const self = this;
         self.option2 = '';
-        // this.$axios.post("getCategory2", {
-        //   cid: value
-        // }).then(function (response) {
-        //   console.log(response.data);
-        //   self.options2 = response.data.data;
-        // }).catch(function (error) {
-        //   console.log('failed to getCategory')
-        // });
-
         this.$axios({
           method: 'post',
           url: 'getCategory2',
@@ -94,15 +101,16 @@
 
       /**
        * category2 change
-       * @param value
+       * @param params
        */
-      selectCategory2Change(value) {
+      selectCategory2Change(params) {
+        const {value, label} = params;
         this.c2id = value;
+        this.category2 = label;
       },
 
       savePublish(v) {
         let self = this;
-
         if (this.articleTitle === '') {
           this.$message({
             type: 'warning',
@@ -148,42 +156,20 @@
           url: 'publish/saveArticle',
           data: data,
           transformRequest: [function (data) {
-            // return self.$qs.stringify(data);
             return JSON.stringify(data);
           }]
         }).then(function (response) {
-          console.log(error);
+          console.log(response.data);
+          self.articleTitle = '';
+          self.c1 = '';
+          self.c2 = '';
           self.$message({
             type: 'success',
             message: '保存成功'
           });
-          console.log(response.data)
         }).catch(function (error) {
           console.log('failed to save article ' + error)
         })
-
-        // this.$axios.post("publish/saveArticle", {
-        //   title: this.articleTitle,
-        //   article: this.editorValue,
-        //   author: window.localStorage.getItem("username"),
-        //   author_id: window.localStorage.getItem("aid"),
-        //   views: 1,
-        //   category: this.category,
-        //   category2: this.category2,
-        //   cid: this.cid,
-        //   c2id: this.c2id,
-        //   time: this.getCurTime(),
-        //   description: '',
-        //   satate: v,
-        // }).then(function (response) {
-        //   console.log(response)
-        // }).catch(function (error) {
-        //   console.log(error);
-        //   self.$message({
-        //     type: 'success',
-        //     message: '保存成功'
-        //   });
-        // });
       },
 
       getCurTime: function () {
@@ -220,11 +206,13 @@
 
   .editor-container {
     border: 1px solid #ffffff;
-    height: 100%;
+    /*height: 100%;*/
+    height: 800px;
     margin-top: 10px;
   }
 
   .editor {
+    min-height: 800px;
     height: 100%;
   }
 

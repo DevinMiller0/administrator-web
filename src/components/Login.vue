@@ -24,7 +24,7 @@
     data() {
       return {
         username: 'admin',
-        password: 'admin',
+        password: '111',
       };
     },
     methods: {
