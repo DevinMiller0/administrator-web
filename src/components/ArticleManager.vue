@@ -216,6 +216,7 @@
        * @param id data for state
        */
       modifyState(state, id) {
+        let self = this;
         this.$axios({
           method: 'post',
           url: 'setState',
@@ -224,7 +225,7 @@
             id: id
           },
           transformRequest: [function (data) {
-            return this.$qs.stringify(data);
+            return self.$qs.stringify(data);
           }]
         }).then(function (response) {
           console.log(response.data)

@@ -145,7 +145,7 @@
           c2id: this.c2id,
           time: this.getCurTime(),
           description: '',
-          satate: v,
+          state: v,
         };
 
         this.$axios({
@@ -163,6 +163,7 @@
           self.articleTitle = '';
           self.c1 = '';
           self.c2 = '';
+          self.editorValue = '';
           self.$message({
             type: 'success',
             message: '保存成功'
