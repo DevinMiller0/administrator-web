@@ -28,7 +28,7 @@
         :ishljs="true"
         v-model="editorValue"
         class="editor"
-        :scrollStyle="true" />
+        :scrollStyle="true"/>
     </div>
 
   </div>
@@ -48,8 +48,8 @@
         c2id: '',
 
         //no use
-        c1:'',
-        c2:''
+        c1: '',
+        c2: ''
       }
     },
     methods: {

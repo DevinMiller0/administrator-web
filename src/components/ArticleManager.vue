@@ -21,7 +21,7 @@
     </div>
 
     <div id="content-container">
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table stripe :data="tableData" border style="width: 100%">
         <el-table-column prop="time" label="日期" width="180" align="center"/>
 
         <el-table-column prop="state" label="状态" width="150" align="center">
@@ -39,9 +39,20 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="220" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="editClick(scope.row.id)">编辑</el-button>
+            <el-button size="mini" type="success" @click="modifyClick(
+              scope.row.id,
+              scope.row.cid,
+              scope.row.category,
+              scope.row.c2id,
+              scope.row.category2,
+              scope.row.title
+              )">
+              修改
+            </el-button>
+
+            <el-button size="mini" type="warning" @click="editClick(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="danger" @click="deleteArticle(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -49,12 +60,35 @@
         <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%"
                    custom-class="edit-dialog">
           <div class="el-dialog-div">
-            <mavon-editor :ishljs="true" scrollStyle="true" v-highlight class="editor" v-model="editorValue"/>
+            <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
           </div>
           <span slot="footer" class="dialog-footer">
               <el-button @click="closeEditDialog">取 消</el-button>
               <el-button type="primary" @click="certainEditDialog">确 定</el-button>
           </span>
+        </el-dialog>
+
+        <el-dialog title="修改" :append-to-body="true" :visible.sync="modifyDialogVisiable">
+          <el-input v-model="dialogTitle" placeholder="文章标题" style="margin-bottom: 20px"></el-input>
+
+          <el-select v-model="dialogOption1" @change="dialogChange1" filterable placeholder="一级分类">
+            <el-option v-for="item in dialogOptions1"
+                       :label="item.categoryName"
+                       :key="item.cid"
+                       :value="{value:item.cid,label:item.categoryName}"/>
+          </el-select>
+
+          <el-select v-model="dialogOption2" @change="dialogChange2" filterable placeholder="二级分类">
+            <el-option v-for="item in dialogOptions2"
+                       :label="item.name"
+                       :key="item.c2id"
+                       :value="{value:item.c2id,label:item.name}"/>
+          </el-select>
+
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="modifyDialogVisiable = false">取 消</el-button>
+            <el-button type="primary" @click="certainModifyDialog">确 定</el-button>
+          </div>
         </el-dialog>
 
         <el-table-column prop="title" label="文章标题" align="center"/>
@@ -79,8 +113,19 @@
         textarea: '',
         editorValue: '',
 
+        dialogTitle: '',
+        dialogArticleId: '',
+        dialogCid: '',
+        dialogC2id: '',
+        dialogOption1: '',
+        dialogOption2: '',
+        dialogOptions1: [],
+        dialogOptions2: [],
+
+
         dialogEditVisible: false,
         dialogDeleteVisible: false,
+        modifyDialogVisiable: false,
 
         pagination: {
           total: 0,
@@ -126,6 +171,39 @@
         })
       },
 
+      certainModifyDialog() {
+        console.log(this.dialogOption1);
+        console.log(this.dialogOption2);
+        console.log(this.dialogTitle);
+        console.log(this.dialogCid);
+        console.log(this.dialogC2id);
+        let self = this;
+        this.$axios({
+          method: 'post',
+          url: 'modifyArticleInfo',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          data: {
+            id: self.dialogArticleId,
+            category: self.dialogOption1,
+            category2: self.dialogOption2,
+            cid: self.dialogCid,
+            c2id: self.dialogC2id,
+            title: self.dialogTitle,
+          },
+          transformRequest: [function (data) {
+            return JSON.stringify(data);
+          }]
+        }).then(function (response) {
+          console.log(response.data);
+          if (response.data.code === 200) {
+            self.modifyDialogVisiable = false;
+            self.loadTableData()
+          }
+        })
+      },
+
       //删除
       deleteArticle(id) {
         let self = this;
@@ -140,7 +218,7 @@
             data: {
               articleId: id
             },
-            transformRequest:[function (data) {
+            transformRequest: [function (data) {
               return self.$qs.stringify(data)
             }]
           }).then(function (response) {
@@ -166,6 +244,45 @@
       //查询分类的文章列表
       selectArticle() {
         this.loadTableData();
+      },
+
+      //修改文章标题或分类
+      modifyClick(id, cid, category, c2id, category2, title) {
+        const self = this;
+        this.dialogCid = cid;
+        this.dialogC2id = c2id;
+        this.dialogOption1 = category;
+        this.dialogOption2 = category2;
+        this.dialogTitle = title;
+        this.dialogArticleId = id;
+
+        this.$axios({
+          type: 'get',
+          url: 'getCategory',
+        }).then(function (response) {
+          self.dialogOptions1 = response.data.data;
+          console.log("一级分类：" + self.dialogCategory1);
+          self.modifyDialogVisiable = true;
+        }).catch(function (error) {
+          console.log('failed to getCategory ' + error)
+        });
+
+
+        this.$axios({
+          method: 'post',
+          url: 'getCategory2',
+          data: {
+            cid: this.dialogCid
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }],
+        }).then(function (response) {
+          self.dialogOptions2 = response.data.data;
+          console.log('二级分类：' + response.data.data);
+        }).catch(function (error) {
+          console.log('failed to getCategory ' + error);
+        })
       },
 
       selectAllArticle() {
@@ -243,8 +360,8 @@
           type: 'get',
           url: 'getCategory',
         }).then(function (response) {
-          console.log(response.data);
           self.category = response.data.data;
+          console.log('loadCategory：' + self.category.toString());
         }).catch(function (error) {
           console.log('failed to getCategory')
         })
@@ -273,6 +390,36 @@
         }).catch(function (error) {
           console.log('failed to getCategory ' + error);
         })
+      },
+
+      dialogChange1(params) {
+        let {value, label} = params;
+        this.dialogCid = value;
+        this.dialogOption1 = label;
+        this.dialogOption2 = '';
+        let self = this;
+
+        this.$axios({
+          method: 'post',
+          url: 'getCategory2',
+          data: {
+            cid: value
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }],
+        }).then(function (response) {
+          self.dialogOptions2 = response.data.data;
+          console.log('二级分类：' + response.data.data);
+        }).catch(function (error) {
+          console.log('failed to getCategory ' + error);
+        })
+      },
+
+      dialogChange2(params) {
+        let {value, label} = params;
+        this.dialogC2id = value;
+        this.dialogOption2 = label;
       },
 
       //点击编辑按钮
