@@ -33,14 +33,14 @@
             <span slot="title">文章发布</span>
           </el-menu-item>
 
-          <el-menu-item index="dataStatistic" @click="switchMenu(3)">
-            <i class="el-icon-data-analysis"/>
-            <span slot="title">数据统计</span>
-          </el-menu-item>
-
           <el-menu-item index="categoryManager" @click="switchMenu(4)">
             <i class="el-icon-files"/>
             <span slot="title">分类管理</span>
+          </el-menu-item>
+
+          <el-menu-item index="dataStatistic" @click="switchMenu(3)">
+            <i class="el-icon-data-analysis"/>
+            <span slot="title">数据统计</span>
           </el-menu-item>
 
         </el-menu>
@@ -104,7 +104,7 @@
           }
 
           case 4: {
-            console.log('数据统计');
+            console.log('分类管理');
             this.$router.push({
               path: '/categoryManager'
             });
