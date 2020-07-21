@@ -42,12 +42,29 @@
       <el-table-column label="ID" prop="c2id" width="80" align="center"></el-table-column>
       <el-table-column label="所属分类ID" prop="cid" width="150" align="center"></el-table-column>
       <el-table-column label="分类名称" prop="name" width="200" align="center"></el-table-column>
-      <el-table-column label="操 作" prop="categoryName" width="100" align="center">
+      <el-table-column label="操 作" width="180" align="center">
         <template slot-scope="scope">
+          <el-button size="mini" type="success" @click="editCategory2(
+            scope.row.c2id,
+            scope.row.name,
+            scope.row.description
+            )"
+          >编辑
+          </el-button>
           <el-button size="mini" type="danger" @click="deleteCategory2(scope.row.c2id)">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column label="描 述" prop="description" align="center"></el-table-column>
+
+      <el-dialog title="修改二级分类" :append-to-body="true" :visible.sync="editCategory2DialogVisiable">
+        <el-input v-model="category2Name" placeholder="" style="margin-bottom: 20px"></el-input>
+        <el-input type="textarea" v-model="category2Desc" placeholder="" style="margin-bottom: 20px"></el-input>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="editCategory2DialogVisiable = false">取 消</el-button>
+          <el-button type="primary" @click="certainEditCategory2">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-table>
   </div>
 
@@ -67,7 +84,12 @@
         beCategory1: '',
         beCategory2: '',
         cid: '',
+        c2id: '',
         description: '',
+        editCategory2DialogVisiable: false,
+        category2Name: '',
+        category2Desc: '',
+
       }
     },
     created() {
@@ -160,6 +182,41 @@
           })
         }).catch(() => {
           console.log("取消")
+        })
+      },
+
+      editCategory2(c2id, categoryName, description) {
+        this.editCategory2DialogVisiable = true;
+        this.category2Name = categoryName;
+        this.category2Desc = description;
+        this.c2id = c2id;
+
+      },
+
+
+      certainEditCategory2() {
+        let self = this;
+        this.$axios({
+          method:'post',
+          url:'categoryManager/modifyCategory2Info',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          data:{
+            c2id: self.c2id,
+            name: self.category2Name,
+            description: self.category2Desc
+          },
+          transformRequest:[function (data) {
+            return JSON.stringify(data)
+          }]
+        }).then(function (response) {
+          if (response.data.code === 200) {
+            self.editCategory2DialogVisiable = false;
+            self.loadCategory2()
+          }
+        }).catch(function (error) {
+          console.log(error)
         })
       },
 
