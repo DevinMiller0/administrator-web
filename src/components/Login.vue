@@ -23,8 +23,8 @@
   export default {
     data() {
       return {
-        username: 'admin',
-        password: '111',
+        username: '',
+        password: '',
       };
     },
     methods: {
