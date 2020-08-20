@@ -25,7 +25,7 @@
 
     <div class="editor-container">
       <mavon-editor
-        :ishljs="true"
+        :ishljs="false"
         v-model="editorValue"
         class="editor"
         :scrollStyle="true"/>

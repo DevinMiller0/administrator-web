@@ -60,7 +60,9 @@
         <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%"
                    custom-class="edit-dialog">
           <div class="el-dialog-div">
-            <mavon-editor :ishljs="true" v-highlight class="editor" v-model="editorValue"/>
+            <mavon-editor
+              :ishljs="true"
+              :codeStyle="codeStyle" class="editor" v-model="editorValue"/>
           </div>
           <span slot="footer" class="dialog-footer">
               <el-button @click="closeEditDialog">取 消</el-button>
@@ -139,6 +141,8 @@
         c2: '',
 
         editArticleId: '',
+        //atelier-seaside-light
+        codeStyle:'tomorrow-night-eighties',
       }
     },
 
