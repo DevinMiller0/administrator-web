@@ -39,7 +39,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="220" align="center">
+        <el-table-column label="操作" width="230" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="success" @click="modifyClick(
               scope.row.id,
@@ -57,7 +57,13 @@
           </template>
         </el-table-column>
 
-        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%"
+        <el-table-column label="关键词&描述" width="150" align="center">
+          <template slot-scope="scope">
+            <el-button size="mini" round @click="keywords(scope.row)">查看</el-button>
+          </template>
+        </el-table-column>
+
+        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%" :close-on-click-modal="false"
                    custom-class="edit-dialog">
           <div class="el-dialog-div">
             <mavon-editor
@@ -68,9 +74,9 @@
               <el-button @click="closeEditDialog">取 消</el-button>
               <el-button type="primary" @click="certainEditDialog">确 定</el-button>
           </span>
-        </el-dialog>
+        </el-dialog >
 
-        <el-dialog title="修改" :append-to-body="true" :visible.sync="modifyDialogVisiable">
+        <el-dialog title="修改" :append-to-body="true" :visible.sync="modifyDialogVisiable" :close-on-click-modal="false">
           <el-input v-model="dialogTitle" placeholder="文章标题" style="margin-bottom: 20px"></el-input>
 
           <el-select v-model="dialogOption1" @change="dialogChange1" filterable placeholder="一级分类">
@@ -93,6 +99,45 @@
           </div>
         </el-dialog>
 
+        <el-dialog title="关键词&描述" :append-to-body="true" :visible.sync="dialogKeywordsVisiable" :close-on-click-modal="false">
+
+          <div class="keywords-content" >
+            <el-tag
+              :key="tag"
+              v-for="tag in keywordsArr"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible"
+              v-model="inputValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            >
+            </el-input>
+            <el-button class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+
+            <el-input
+              style="margin-top: 12px"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入描述内容"
+              v-model="description">
+            </el-input>
+
+          </div>
+
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogKeywordsVisiable = false">取 消</el-button>
+            <el-button type="primary" @click="submitKeywords">确 定</el-button>
+          </div>
+        </el-dialog>
+
         <el-table-column prop="title" label="文章标题" align="center"/>
       </el-table>
     </div>
@@ -111,9 +156,12 @@
     data() {
       return {
         tableData: [],
+        keywordsArr: [],
 
         textarea: '',
         editorValue: '',
+        description: '',
+
 
         dialogTitle: '',
         dialogArticleId: '',
@@ -128,6 +176,9 @@
         dialogEditVisible: false,
         dialogDeleteVisible: false,
         modifyDialogVisiable: false,
+        dialogKeywordsVisiable: false,
+        inputVisible: false,
+        inputValue: '',
 
         pagination: {
           total: 0,
@@ -142,7 +193,7 @@
 
         editArticleId: '',
         //atelier-seaside-light
-        codeStyle:'tomorrow-night-eighties',
+        codeStyle: 'tomorrow-night-eighties',
       }
     },
 
@@ -185,7 +236,7 @@
         this.$axios({
           method: 'post',
           url: 'modifyArticleInfo',
-          headers:{
+          headers: {
             'Content-Type': 'application/json'
           },
           data: {
@@ -454,6 +505,42 @@
         }).catch(function (error) {
           console.log('请求失败：' + error)
         });
+      },
+
+      // 关键词与描述
+      keywords(obj) {
+        this.dialogKeywordsVisiable = true;
+        if (obj.keywords === null) {
+          this.keywordsArr = [];
+        } else {
+          this.keywordsArr = obj.keywords.split(",");
+        }
+
+        this.description = obj.description;
+
+      },
+
+      handleClose(tag) {
+        this.keywordsArr.splice(this.keywordsArr.indexOf(tag), 1);
+        console.log(this.keywordsArr)
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.keywordsArr.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      },
+      submitKeywords() {
+        let keywords = this.keywordsArr.toString();
+        let description = this.description;
       }
     }
   }
@@ -517,5 +604,24 @@
   .edit-dialog > div:nth-child(3) {
     padding: 15px 20px;
     flex: 0;
+  }
+
+
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
   }
 </style>

@@ -23,6 +23,37 @@
       <el-button type="success" @click="savePublish(0)" size="medium">保存为草稿</el-button>
     </div>
 
+    <div class="keywords-content" >
+      <el-tag
+        :key="tag"
+        v-for="tag in keywordsArr"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(tag)">
+        {{tag}}
+      </el-tag>
+      <el-input
+        class="input-new-tag"
+        v-if="inputVisible"
+        v-model="inputValue"
+        ref="saveTagInput"
+        size="small"
+        @keyup.enter.native="handleInputConfirm"
+        @blur="handleInputConfirm"
+      >
+      </el-input>
+      <el-button class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+
+      <el-input
+        style="margin-top: 12px"
+        type="textarea"
+        :autosize="{ minRows: 2, maxRows: 4}"
+        placeholder="请输入描述内容"
+        v-model="description">
+      </el-input>
+
+    </div>
+
     <div class="editor-container">
       <mavon-editor
         :ishljs="false"

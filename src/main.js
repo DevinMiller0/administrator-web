@@ -22,9 +22,9 @@ Vue.directive('highlight', function (el) {
   })
 });
 
-axios.defaults.baseURL = 'http://gleaners.cn:8099/';
+// axios.defaults.baseURL = 'http://gleaners.cn:8099/';
 // axios.defaults.baseURL = 'http://122.51.31.15:8099/';
-// axios.defaults.baseURL = 'http://localhost:8099/';
+axios.defaults.baseURL = 'http://localhost:8099/';
 axios.interceptors.request.use(
   config => {
     config.headers.Authorization = window.localStorage.getItem('token');
