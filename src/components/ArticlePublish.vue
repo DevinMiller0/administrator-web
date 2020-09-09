@@ -42,7 +42,7 @@
         @blur="handleInputConfirm"
       >
       </el-input>
-      <el-button class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+      <el-button class="button-new-tag" size="small" @click="showInput">+ 添加关键词</el-button>
 
       <el-input
         style="margin-top: 12px"
@@ -78,11 +78,16 @@
         cid: '',
         c2id: '',
 
+        inputVisible: false,
+        inputValue: '',
+        keywordsArr: [],
+
         //no use
         c1: '',
         c2: ''
       }
     },
+
     methods: {
       save() {
         console.log(this.articleTitle)
@@ -142,6 +147,8 @@
 
       savePublish(v) {
         let self = this;
+        let keywords = this.keywordsArr.toString();
+        let description = this.description;
         if (this.articleTitle === '') {
           this.$message({
             type: 'warning',
@@ -212,9 +219,28 @@
         let minutes = new Date().getMinutes();
         let second = new Date().getSeconds();
         return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + second;
-      }
-    },
+      },
 
+
+      handleClose(tag) {
+        this.keywordsArr.splice(this.keywordsArr.indexOf(tag), 1);
+        console.log(this.keywordsArr)
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.keywordsArr.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      },
+    },
 
     watch: {
       'articleTitle': {
@@ -253,5 +279,29 @@
     display: flex;
     flex-flow: column;
     justify-content: center;
+  }
+</style>
+
+<style>
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+
+  .button-new-tag {
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+
+  .keywords-content{
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 </style>

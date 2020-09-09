@@ -156,7 +156,6 @@
     data() {
       return {
         tableData: [],
-        keywordsArr: [],
 
         textarea: '',
         editorValue: '',
@@ -179,6 +178,7 @@
         dialogKeywordsVisiable: false,
         inputVisible: false,
         inputValue: '',
+        keywordsArr: [],
 
         pagination: {
           total: 0,
@@ -612,7 +612,6 @@
   }
 
   .button-new-tag {
-    margin-left: 10px;
     height: 32px;
     line-height: 30px;
     padding-top: 0;
