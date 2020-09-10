@@ -23,7 +23,7 @@
       <el-button type="success" @click="savePublish(0)" size="medium">保存为草稿</el-button>
     </div>
 
-    <div class="keywords-content" >
+    <div class="keywords-content">
       <el-tag
         :key="tag"
         v-for="tag in keywordsArr"
@@ -81,6 +81,8 @@
         inputVisible: false,
         inputValue: '',
         keywordsArr: [],
+
+        description: '',
 
         //no use
         c1: '',
@@ -182,7 +184,8 @@
           cid: this.cid,
           c2id: this.c2id,
           time: this.getCurTime(),
-          description: '',
+          description: description,
+          keywords: keywords,
           state: v,
         };
 
@@ -202,6 +205,8 @@
           self.c1 = '';
           self.c2 = '';
           self.editorValue = '';
+          self.description = '';
+          self.keywordsArr = [];
           self.$message({
             type: 'success',
             message: '保存成功'
@@ -300,7 +305,7 @@
     vertical-align: bottom;
   }
 
-  .keywords-content{
+  .keywords-content {
     padding-top: 10px;
     padding-bottom: 10px;
   }

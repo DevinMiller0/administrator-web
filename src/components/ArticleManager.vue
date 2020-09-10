@@ -63,7 +63,8 @@
           </template>
         </el-table-column>
 
-        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%" :close-on-click-modal="false"
+        <el-dialog title="编辑" :append-to-body="true" :visible.sync="dialogEditVisible" width="85%"
+                   :close-on-click-modal="false"
                    custom-class="edit-dialog">
           <div class="el-dialog-div">
             <mavon-editor
@@ -74,7 +75,7 @@
               <el-button @click="closeEditDialog">取 消</el-button>
               <el-button type="primary" @click="certainEditDialog">确 定</el-button>
           </span>
-        </el-dialog >
+        </el-dialog>
 
         <el-dialog title="修改" :append-to-body="true" :visible.sync="modifyDialogVisiable" :close-on-click-modal="false">
           <el-input v-model="dialogTitle" placeholder="文章标题" style="margin-bottom: 20px"></el-input>
@@ -99,9 +100,10 @@
           </div>
         </el-dialog>
 
-        <el-dialog title="关键词&描述" :append-to-body="true" :visible.sync="dialogKeywordsVisiable" :close-on-click-modal="false">
+        <el-dialog title="关键词&描述" :append-to-body="true" :visible.sync="dialogKeywordsVisiable"
+                   :close-on-click-modal="false">
 
-          <div class="keywords-content" >
+          <div class="keywords-content">
             <el-tag
               :key="tag"
               v-for="tag in keywordsArr"
@@ -120,7 +122,7 @@
               @blur="handleInputConfirm"
             >
             </el-input>
-            <el-button class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+            <el-button class="button-new-tag" size="small" @click="showInput">+ 添加关键词</el-button>
 
             <el-input
               style="margin-top: 12px"
@@ -509,15 +511,14 @@
 
       // 关键词与描述
       keywords(obj) {
+        this.articleId = obj.id;
         this.dialogKeywordsVisiable = true;
         if (obj.keywords === null) {
           this.keywordsArr = [];
         } else {
           this.keywordsArr = obj.keywords.split(",");
         }
-
         this.description = obj.description;
-
       },
 
       handleClose(tag) {
@@ -541,6 +542,28 @@
       submitKeywords() {
         let keywords = this.keywordsArr.toString();
         let description = this.description;
+        let self = this;
+
+        this.$axios({
+          method: 'post',
+          url: 'modifyKeywords',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            id: self.articleId,
+            keywords: keywords,
+            description: description,
+          },
+          transformRequest: [function (data) {
+            return JSON.stringify(data)
+          }]
+        }).then(function (response) {
+          console.log(response.data);
+          self.dialogKeywordsVisiable = false;
+        }).catch(function (error) {
+          console.log('请求失败：' + error)
+        });
       }
     }
   }
