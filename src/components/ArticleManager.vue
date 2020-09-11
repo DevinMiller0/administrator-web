@@ -41,17 +41,7 @@
 
         <el-table-column label="操作" width="230" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="modifyClick(
-              scope.row.id,
-              scope.row.cid,
-              scope.row.category,
-              scope.row.c2id,
-              scope.row.category2,
-              scope.row.title
-              )">
-              修改
-            </el-button>
-
+            <el-button size="mini" type="success" @click="modifyClick(scope.row)">修改</el-button>
             <el-button size="mini" type="warning" @click="editClick(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="danger" @click="deleteArticle(scope.row.id)">删除</el-button>
           </template>
@@ -112,7 +102,7 @@
               @close="handleClose(tag)">
               {{tag}}
             </el-tag>
-            <el-input
+            <el-input style="width: 100px"
               class="input-new-tag"
               v-if="inputVisible"
               v-model="inputValue"
@@ -120,8 +110,7 @@
               size="small"
               @keyup.enter.native="handleInputConfirm"
               @blur="handleInputConfirm"
-            >
-            </el-input>
+            ></el-input>
             <el-button class="button-new-tag" size="small" @click="showInput">+ 添加关键词</el-button>
 
             <el-input
@@ -162,7 +151,6 @@
         textarea: '',
         editorValue: '',
         description: '',
-
 
         dialogTitle: '',
         dialogArticleId: '',
@@ -304,14 +292,14 @@
       },
 
       //修改文章标题或分类
-      modifyClick(id, cid, category, c2id, category2, title) {
+      modifyClick(item) {
         const self = this;
-        this.dialogCid = cid;
-        this.dialogC2id = c2id;
-        this.dialogOption1 = category;
-        this.dialogOption2 = category2;
-        this.dialogTitle = title;
-        this.dialogArticleId = id;
+        this.dialogCid = item.cid;
+        this.dialogC2id = item.c2id;
+        this.dialogOption1 = item.category;
+        this.dialogOption2 = item.category2;
+        this.dialogTitle = item.title;
+        this.dialogArticleId = item.id;
 
         this.$axios({
           type: 'get',
