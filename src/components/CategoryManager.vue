@@ -42,16 +42,12 @@
       <el-table-column label="ID" prop="c2id" width="80" align="center"></el-table-column>
       <el-table-column label="所属分类ID" prop="cid" width="150" align="center"></el-table-column>
       <el-table-column label="分类名称" prop="name" width="200" align="center"></el-table-column>
-      <el-table-column label="操 作" width="180" align="center">
+      <el-table-column label="操 作" width="230" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="success" @click="editCategory2(
-            scope.row.c2id,
-            scope.row.name,
-            scope.row.description
-            )"
-          >编辑
-          </el-button>
+          <el-button size="mini" type="success"
+                     @click="editCategory2(scope.row.c2id,scope.row.name, scope.row.description)">编辑</el-button>
           <el-button size="mini" type="danger" @click="deleteCategory2(scope.row.c2id)">删除</el-button>
+          <el-button size="mini" type="warning" @click="mangeDevide()">划分</el-button>
         </template>
       </el-table-column>
       <el-table-column label="描 述" prop="description" align="center"></el-table-column>
@@ -65,6 +61,20 @@
           <el-button type="primary" @click="certainEditCategory2">确 定</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog title="文章划分" style="width: 25%" :append-to-body="true" :visible.sync="devideDialogVisible">
+        <el-table :data="devideData" stripe border style="width: 100%">
+<!--          <el-table-column label="Name" prop="name" align="center"></el-table-column>-->
+        </el-table>
+
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-input size="small" type="text" :rows="1" style="width: 200px" clearable="true" placeholder="请输入划分名"></el-input>
+          <el-button size="small" type="primary" @click="btnAddDevide">add</el-button>
+        </div>
+
+      </el-dialog>
+
+
     </el-table>
   </div>
 
@@ -77,16 +87,18 @@
       return {
         categoryTableData: [],
         category2TableData: [],
+        devideData:[],
         isBtnActive: false,
-        changeBackground: '',
         addCategory1Dialog: false,
         addCategory2Dialog: false,
+        editCategory2DialogVisiable: false,
+        devideDialogVisible: false,
+        changeBackground: '',
         beCategory1: '',
         beCategory2: '',
         cid: '',
         c2id: '',
         description: '',
-        editCategory2DialogVisiable: false,
         category2Name: '',
         category2Desc: '',
 
@@ -190,9 +202,15 @@
         this.category2Name = categoryName;
         this.category2Desc = description;
         this.c2id = c2id;
-
       },
 
+      mangeDevide() {
+        this.devideDialogVisible = true;
+      },
+
+      btnAddDevide(){
+
+      },
 
       certainEditCategory2() {
         let self = this;
