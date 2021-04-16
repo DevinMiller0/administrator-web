@@ -45,9 +45,10 @@
       <el-table-column label="操 作" width="230" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="success"
-                     @click="editCategory2(scope.row.c2id,scope.row.name, scope.row.description)">编辑</el-button>
+                     @click="editCategory2(scope.row.c2id,scope.row.name, scope.row.description)">编辑
+          </el-button>
           <el-button size="mini" type="danger" @click="deleteCategory2(scope.row.c2id)">删除</el-button>
-          <el-button size="mini" type="warning" @click="mangeDevide()">划分</el-button>
+          <el-button size="mini" type="warning" @click="mangeDevide(scope.row.cid, scope.row.c2id)">划分</el-button>
         </template>
       </el-table-column>
       <el-table-column label="描 述" prop="description" align="center"></el-table-column>
@@ -62,19 +63,23 @@
         </div>
       </el-dialog>
 
-      <el-dialog title="文章划分" style="width: 25%" :append-to-body="true" :visible.sync="devideDialogVisible">
+      <el-dialog title="文章划分" :append-to-body="true" :visible.sync="devideDialogVisible">
         <el-table :data="devideData" stripe border style="width: 100%">
-<!--          <el-table-column label="Name" prop="name" align="center"></el-table-column>-->
+          <el-table-column label="category3" prop="name" align="center"></el-table-column>
+          <el-table-column label="操 作" width="230" align="center">
+            <template slot-scope="scope">
+              <el-button size="mini" type="danger" @click="deleteCategory3(scope.row.cid3)">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
         <div slot="footer" class="dialog-footer" style="text-align: center">
-          <el-input size="small" type="text" :rows="1" style="width: 200px" clearable="true" placeholder="请输入划分名"></el-input>
+          <el-input size="small" v-model="addCategory3" type="text" :rows="1" style="width: 30%"
+                    placeholder="请输入划分名"></el-input>
           <el-button size="small" type="primary" @click="btnAddDevide">add</el-button>
         </div>
 
       </el-dialog>
-
-
     </el-table>
   </div>
 
@@ -87,7 +92,7 @@
       return {
         categoryTableData: [],
         category2TableData: [],
-        devideData:[],
+        devideData: [],
         isBtnActive: false,
         addCategory1Dialog: false,
         addCategory2Dialog: false,
@@ -98,9 +103,12 @@
         beCategory2: '',
         cid: '',
         c2id: '',
+        uploadCid1: '',
+        uploadCid2: '',
         description: '',
         category2Name: '',
         category2Desc: '',
+        addCategory3: '',
 
       }
     },
@@ -197,6 +205,24 @@
         })
       },
 
+      deleteCategory3(cid3) {
+        let self = this;
+        self.$axios({
+          method: 'post',
+          url: 'categoryManager/delCategory3',
+          data: {
+            cid3: cid3,
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }]
+        }).then(function (response) {
+          if (response.data.code === 200) {
+            self.loadCategory3(self.uploadCid1, self.uploadCid2, self);
+          }
+        });
+      },
+
       editCategory2(c2id, categoryName, description) {
         this.editCategory2DialogVisiable = true;
         this.category2Name = categoryName;
@@ -204,28 +230,54 @@
         this.c2id = c2id;
       },
 
-      mangeDevide() {
-        this.devideDialogVisible = true;
+      mangeDevide(cid1, cid2) {
+        let self = this;
+        self.devideDialogVisible = true;
+        self.uploadCid1 = cid1;
+        self.uploadCid2 = cid2;
+        self.loadCategory3(cid1, cid2, self);
       },
 
-      btnAddDevide(){
-
+      btnAddDevide() {
+        let self = this;
+        if (self.addCategory3 !== '') {
+          self.$axios({
+            method: 'post',
+            url: 'categoryManager/addCategory3',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: {
+              cid1: self.uploadCid1,
+              cid2: self.uploadCid2,
+              name: self.addCategory3
+            },
+            transformRequest: [function (data) {
+              return JSON.stringify(data)
+            }]
+          }).then(function (response) {
+            if (response.data.code === 200) {
+              self.addCategory3 = '';
+              self.loadCategory3(self.uploadCid1, self.uploadCid2, self);
+            }
+          });
+        }
       },
 
       certainEditCategory2() {
         let self = this;
         this.$axios({
-          method:'post',
-          url:'categoryManager/modifyCategory2Info',
-          headers:{
+          method: 'post',
+          url: 'categoryManager/modifyCategory2Info',
+          headers: {
             'Content-Type': 'application/json'
           },
-          data:{
+          data: {
             c2id: self.c2id,
             name: self.category2Name,
             description: self.category2Desc
           },
-          transformRequest:[function (data) {
+          transformRequest: [function (data) {
             return JSON.stringify(data)
           }]
         }).then(function (response) {
@@ -290,6 +342,28 @@
 
         })
       },
+
+      loadCategory3(cid1, cid2, self) {
+        self.$axios({
+          method: 'post',
+          url: 'categoryManager/getCategory3',
+          data: {
+            cid1: cid1,
+            cid2: cid2
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data)
+          }]
+        }).then(function (response) {
+          let d = response.data;
+          if (d.code === 200) {
+            self.devideData = d.data;
+          }
+          console.log("response：" + JSON.stringify(response.data))
+        }).catch(function (error) {
+          console.log("error：" + error)
+        })
+      }
     }
   }
 </script>
@@ -304,6 +378,10 @@
 <style>
   .el-col {
     border-radius: 4px;
+  }
+
+  .el-dialog {
+    width: 30%;
   }
 
   .bg-purple-dark {

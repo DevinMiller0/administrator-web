@@ -19,6 +19,13 @@
                    :value="{value:item.c2id,label:item.name}"/>
       </el-select>
 
+      <el-select v-model="c3" filterable placeholder="请选择">
+        <el-option v-for="item in options3"
+                   :label="item.name"
+                   :key="item.cid3"
+                   :value="{value:item.cid3, label:item.name}"/>
+      </el-select>
+
       <el-button type="primary" @click="savePublish(1)" size="medium">保存并发布</el-button>
       <el-button type="success" @click="savePublish(0)" size="medium">保存为草稿</el-button>
     </div>
@@ -72,8 +79,10 @@
         articleTitle: '',
         options1: [],
         options2: [],
+        options3: [],
         category: '',
         category2: '',
+        category3: '',
         editorValue: '',
         cid: '',
         c2id: '',
@@ -145,6 +154,28 @@
         const {value, label} = params;
         this.c2id = value;
         this.category2 = label;
+        loadCategory3();
+      },
+
+      loadCategory3() {
+        let self = this;
+        self.$axios({
+          method: 'post',
+          url: 'categoryManager/getCategory3',
+          data: {
+            cid1: self.cid,
+            cid2: self.c2id
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data)
+          }]
+        }).then(function (response) {
+          let d = response.data;
+          if (d.code === 200) {
+            self.options3 = d.data;
+          }
+          console.log("response：" + JSON.stringify(d))
+        })
       },
 
       savePublish(v) {
