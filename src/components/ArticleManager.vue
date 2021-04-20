@@ -33,7 +33,7 @@
 
         <el-table-column prop="views" label="浏览量" width="80" align="center"/>
 
-        <el-table-column label="分类" width="180" align="center">
+        <el-table-column label="分类" width="230" align="center">
           <template slot-scope="scope">
             <span>{{scope.row.category +' / '+ scope.row.category2}}</span>
           </template>
@@ -84,6 +84,13 @@
                        :value="{value:item.c2id,label:item.name}"/>
           </el-select>
 
+          <el-select v-model="dialogOption3" @change="dialogChange3" filterable placeholder="三级分类">
+            <el-option v-for="item in dialogOptions3"
+                       :label="item.name"
+                       :key="item.cid3"
+                       :value="{value:item.cid3,label:item.name}"/>
+          </el-select>
+
           <div slot="footer" class="dialog-footer">
             <el-button @click="modifyDialogVisiable = false">取 消</el-button>
             <el-button type="primary" @click="certainModifyDialog">确 定</el-button>
@@ -103,13 +110,13 @@
               {{tag}}
             </el-tag>
             <el-input style="width: 100px"
-              class="input-new-tag"
-              v-if="inputVisible"
-              v-model="inputValue"
-              ref="saveTagInput"
-              size="small"
-              @keyup.enter.native="handleInputConfirm"
-              @blur="handleInputConfirm"
+                      class="input-new-tag"
+                      v-if="inputVisible"
+                      v-model="inputValue"
+                      ref="saveTagInput"
+                      size="small"
+                      @keyup.enter.native="handleInputConfirm"
+                      @blur="handleInputConfirm"
             ></el-input>
             <el-button class="button-new-tag" size="small" @click="showInput">+ 添加关键词</el-button>
 
@@ -156,10 +163,13 @@
         dialogArticleId: '',
         dialogCid: '',
         dialogC2id: '',
+        dialogC3id: '',
         dialogOption1: '',
         dialogOption2: '',
+        dialogOption3: '',
         dialogOptions1: [],
         dialogOptions2: [],
+        dialogOptions3: [],
 
 
         dialogEditVisible: false,
@@ -217,13 +227,9 @@
       },
 
       certainModifyDialog() {
-        console.log(this.dialogOption1);
-        console.log(this.dialogOption2);
-        console.log(this.dialogTitle);
-        console.log(this.dialogCid);
-        console.log(this.dialogC2id);
         let self = this;
-        this.$axios({
+        console.log("=========== " + self.dialogC3id)
+        self.$axios({
           method: 'post',
           url: 'modifyArticleInfo',
           headers: {
@@ -235,9 +241,11 @@
             category2: self.dialogOption2,
             cid: self.dialogCid,
             c2id: self.dialogC2id,
+            c3id: self.dialogC3id,
             title: self.dialogTitle,
           },
           transformRequest: [function (data) {
+            console.log(JSON.stringify(data));
             return JSON.stringify(data);
           }]
         }).then(function (response) {
@@ -463,8 +471,32 @@
 
       dialogChange2(params) {
         let {value, label} = params;
-        this.dialogC2id = value;
-        this.dialogOption2 = label;
+        let self = this;
+        self.dialogC2id = value;
+        self.dialogOption2 = label;
+
+        //request category3
+        self.$axios({
+          method: 'post',
+          url: 'getCategory3',
+          data: {
+            c2id: self.dialogC2id
+          },
+          transformRequest: [function (data) {
+            return self.$qs.stringify(data);
+          }],
+        }).then(function (response) {
+          self.dialogOptions3 = response.data.data;
+          console.log('dlfhasdfalk  ' + JSON.stringify(response))
+        }).catch(function (error) {
+          console.log("Failed to getCategory3 " + error);
+        })
+      },
+
+      dialogChange3(params) {
+        let {value, label} = params;
+        this.dialogC3id = value;
+        this.dialogOption3 = label;
       },
 
       //点击编辑按钮
