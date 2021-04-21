@@ -19,7 +19,7 @@
                    :value="{value:item.c2id,label:item.name}"/>
       </el-select>
 
-      <el-select v-model="c3" filterable placeholder="请选择">
+      <el-select v-model="c3" @change="selectCategory3Change" filterable placeholder="请选择">
         <el-option v-for="item in options3"
                    :label="item.name"
                    :key="item.cid3"
@@ -86,6 +86,7 @@
         editorValue: '',
         cid: '',
         c2id: '',
+        c3id:'',
 
         inputVisible: false,
         inputValue: '',
@@ -95,7 +96,8 @@
 
         //no use
         c1: '',
-        c2: ''
+        c2: '',
+        c3: ''
       }
     },
 
@@ -154,7 +156,7 @@
         const {value, label} = params;
         this.c2id = value;
         this.category2 = label;
-        loadCategory3();
+        this.loadCategory3();
       },
 
       loadCategory3() {
@@ -176,6 +178,12 @@
           }
           console.log("response：" + JSON.stringify(d))
         })
+      },
+
+      selectCategory3Change(params){
+        let {value, label} = params;
+        this.c3id = value;
+        this.category3 = label;
       },
 
       savePublish(v) {
@@ -214,6 +222,7 @@
           category2: this.category2,
           cid: this.cid,
           c2id: this.c2id,
+          c3id: this.c3id,
           time: this.getCurTime(),
           description: description,
           keywords: keywords,
@@ -235,6 +244,10 @@
           self.articleTitle = '';
           self.c1 = '';
           self.c2 = '';
+          self.c3 = '';
+          // self.options1 = '';
+          self.options2 = '';
+          self.options3 = '';
           self.editorValue = '';
           self.description = '';
           self.keywordsArr = [];
