@@ -242,12 +242,12 @@
         }).then(function (response) {
           console.log(response.data);
           self.articleTitle = '';
-          self.c1 = '';
-          self.c2 = '';
-          self.c3 = '';
+          // self.c1 = '';
+          // self.c2 = '';
+          // self.c3 = '';
           // self.options1 = '';
-          self.options2 = '';
-          self.options3 = '';
+          // self.options2 = '';
+          // self.options3 = '';
           self.editorValue = '';
           self.description = '';
           self.keywordsArr = [];
